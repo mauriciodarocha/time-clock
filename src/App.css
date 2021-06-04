@@ -1,0 +1,98 @@
+body {
+  background-color: #ededed;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.main .container {
+  padding: 0 30px;
+}
+
+.logo {
+  background-color: white;
+}
+
+.logo-lnk {
+  display: inline-block;
+  padding: 10px;
+}
+
+.menu {
+  background-color: #afdde9;
+}
+
+.menu .links span a {
+  margin-right: 10px;
+  display: inline-block;
+  padding: 5px 8px 6px;
+  color: rgba(0, 0, 0, 0.6);
+  text-decoration: none;
+}
+
+.menu .links span:last-child a {
+  margin-right: 0px;
+}
+
+.menu .help-icon-img {
+  max-width: 16px;
+}
+
+.welcome .help-icon-img {
+  max-width: 28px;
+  transform: translateY(-2px);
+  padding: 0 5px;
+}
+
+.logo-img {
+  max-width: 200px;
+  opacity: 0.6;
+}
+
+.timetable {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.timetable > .column > * {
+  cursor: pointer;
+}
+
+.timetable .header {
+  width: 100%;
+  margin: 10px 0 0;
+}
+
+.timetable .column {
+  width: 40%;
+}
+
+.timetable .column-even {
+  width: 60%;
+}
+
+.timetable .column-odd :after {
+  content: 'in';
+  margin-left: 2px;
+}
+
+.timetable .column-even :after {
+  content: 'out' !important;
+  margin-left: 2px;
+}
+
+@media screen and (max-width:789px) {
+  header {
+    text-align: center;
+  }
+
+  /* .app {
+    text-align: center;
+  } */
+  .logo-img {
+    max-width: 170px;
+  }
+
+  .menu .help-icon-img {
+    transform: translateY(3px);
+  }
+}
