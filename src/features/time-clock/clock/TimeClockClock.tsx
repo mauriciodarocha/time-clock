@@ -1,15 +1,19 @@
-import { MomentInput } from "moment";
 import moment from 'moment-timezone'
-import React, { Context, useContext, useEffect, useState } from "react";
 import Moment from "react-moment";
+import NumberFormat from 'react-number-format'
+import React, { Context, useContext, useEffect, useState } from "react";
+import { MomentInput } from "moment";
+import { Button } from "@material-ui/core";
+import { KeyboardDatePicker, KeyboardTimePicker } from "@material-ui/pickers";
+import { v4 as uuidv4 } from 'uuid'
+
 import { Timetable } from "../../../models/Timetable";
 import { User } from "../../../models/Users";
+
 import { deleteTimetableById, getTimetableById, saveTimetable } from "../../../services/TimeTable";
 import { StoreContext } from "../../../store/Store";
-import { KeyboardDatePicker, KeyboardTimePicker } from "@material-ui/pickers";
-import { Button } from "@material-ui/core";
-import { v4 as uuidv4 } from 'uuid'
 import AlertDialogBox from "../../../assets/alert-dialog-box/alert-dialog-box";
+import numeral from 'numeral';
 
 export interface ClockProps {}
  
@@ -90,20 +94,20 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
 
     const calcTotals = (time: Timetable[]) => {
         const timeTotals: {[key:string]: number} = {}
-        let sum = 0;
+        let sum: number = 0;
         for(let i = 0; i < time.length; i++) {
             const month: string = moment(time[i].punch).format('YYYYMM')
             const current: string = moment(time[i].punch).format('YYYYMMDD')
             const next: string = (time[i+1] && time[i+1].punch) ? moment(time[i+1].punch).format('YYYYMMDD') : ''
             if (current === next) {
                 const duration = moment.duration(moment(time[i+1].punch).diff(time[i].punch));
-                sum = duration.asMinutes()
-                timeTotals[current] = timeTotals[current] ? timeTotals[current] + sum : sum
+                sum = numeral(duration.asHours()).value() || 0
+                timeTotals[current] = timeTotals[current] ? (numeral(timeTotals[current]).add(sum).value()) as number : sum
                 i++
             } else {
                 continue;
             }
-            timeTotals[month] = timeTotals[month] ? timeTotals[month] + sum : sum
+            timeTotals[month] = timeTotals[month] ? (numeral(timeTotals[month]).add(sum).value()) as number : sum
         }
         console.log(timeTotals)
         return timeTotals
@@ -125,7 +129,7 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
         timetable.map((time, index) => {
             const formatedMonth = moment(time.punch).format('YYYYMM')
             if (lastMonth !== moment(time.punch).format('YYYYMM')) {
-                moments.push(<span className={`main-header ${day}`} key={`main-time-header-${time.id}-${index}`}><span className="time-header"><Moment date={time.punch} format="MMMM" /></span><span className="total">{totals && totals[formatedMonth]}{totals && totals[formatedMonth] && 'min'}</span></span>)
+                moments.push(<span className={`main-header ${day}`} key={`main-time-header-${time.id}-${index}`}><span className="time-header"><Moment date={time.punch} format="MMMM" /></span><span className="total">{totals && <NumberFormat value={totals[formatedMonth]} displayType={'text'} decimalScale={2} thousandSeparator={true} suffix={' hours'} />}</span></span>)
                 lastMonth = moment(time.punch).format('YYYYMM')
             }
             if (lastDay !== moment(time.punch).format('DD')) {
@@ -136,7 +140,7 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
                 } else if ((yesterday.format('YYYYMMDD') === formatedDate)) {
                     day = 'yesterday'
                 }
-                moments.push(<span className={`header ${day}`} key={`time-header-${time.id}-${index}`}><span className="time-header"><Moment date={time.punch} format="ddd, MMM DD" /></span><span className="total">{totals && totals[formatedDate]}{totals && totals[formatedDate] && 'min'}</span></span>)
+                moments.push(<span className={`header ${day}`} key={`time-header-${time.id}-${index}`}><span className="time-header"><Moment date={time.punch} format="ddd, MMM DD" /></span><span className="total">{totals && <NumberFormat value={totals[formatedDate]} displayType={'text'} decimalScale={2} thousandSeparator={true} suffix={' hours'} />}</span></span>)
                 lastDay = moment(time.punch).format('DD')
                 pos = 'odd'
             }
