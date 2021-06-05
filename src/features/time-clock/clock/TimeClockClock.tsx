@@ -9,6 +9,7 @@ import { StoreContext } from "../../../store/Store";
 import { KeyboardDatePicker, KeyboardTimePicker } from "@material-ui/pickers";
 import { Button } from "@material-ui/core";
 import { v4 as uuidv4 } from 'uuid'
+import AlertDialogBox from "../../../assets/alert-dialog-box/alert-dialog-box";
 
 export interface ClockProps {}
  
@@ -22,18 +23,21 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
 
     const [dateInput, setDateInput] = useState(moment().tz(moment.tz.guess(true)).format())
     const [timeInput, setTimeInput] = useState(moment().tz(moment.tz.guess(true)).format())
+    const [dialogBox, setDialogBox] = useState(false)
+    const [update, setUpdate] = useState(true)
 
-    useEffect(() => { 
+    useEffect(() => {
         const employeeId = user.id 
-        if (employeeId) {
+        if (employeeId && update) {
             getTimetableById(employeeId)
                 .then((data: Timetable[]) => {
                     if (data) {
                         setTimetable(sort(data))
+                        setUpdate(false)
                     }
                 })
         }
-    }, [user.id, timeToDelete, uuid]);
+    }, [user.id, timeToDelete, uuid, update]);
 
     const handleDateChange = (selectedDate: MomentInput) => {
         const dateIso = moment.utc(selectedDate).local().toISOString()
@@ -44,11 +48,23 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
         setTimeInput(timeIso)
     }
 
-    const deleteTime = (id: Timetable["id"]) => {
-        deleteTimetableById(id)
-            .then((r) => {
-                setTimeToDelete(id)
+    const timeClicked = (id: Timetable["id"]) => {
+        setDialogBox(true)
+        setTimeToDelete(id)
+    }
+
+    const handleDelete = () => {
+        setDialogBox(false)
+        deleteTimetableById(timeToDelete)
+            .then(() => {
+                setTimeToDelete("") // reset
+                setUpdate(true)
             })
+    }
+
+    const handleDontDelete = () => {
+        setTimeToDelete("")
+        setDialogBox(false)
     }
 
     const saveTime = () => {
@@ -62,6 +78,7 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
             saveTimetable(data)
                .then((r) => {
                     setUuid(id)
+                    setUpdate(true)
                 })
         }
     }
@@ -95,7 +112,7 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
                 last = time.punch.replace(/.*?(\d{2})T.*/, '$1')
                 pos = 'odd'
             }
-            moments.push(<span onClick={e => {deleteTime(time.id)}} className={`column column-${pos}`} key={`time-column-${time.id}`}><Moment date={time.punch} format="HH:mm" /></span>)
+            moments.push(<span onClick={e => {timeClicked(time.id)}} className={`column column-${pos}`} key={`time-column-${time.id}`}><Moment date={time.punch} format="HH:mm" /></span>)
             pos = pos === 'odd' ? 'even' : 'odd'
             return moments
         })
@@ -106,6 +123,14 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
         <>
         <div className="row pt-5">
             <div className="col-md-5 px-lg-5 pl-md-5 pb-5">
+                <AlertDialogBox state={[dialogBox, setDialogBox]}>
+                    <Button onClick={handleDelete} color="primary">
+                        I do
+                    </Button>
+                    <Button onClick={handleDontDelete} color="secondary">
+                        Cancel
+                    </Button>
+                </AlertDialogBox>
                 <form className="col-12 col-md-11 pl-0 " onSubmit={onSubmit}>
                     <div>
                         <KeyboardDatePicker

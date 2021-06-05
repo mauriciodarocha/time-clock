@@ -30,6 +30,9 @@
   },
   "scripts": {
     "start": "react-scripts start",
+    "timeclock:start": "npm run timeclock:project && npm run timeclock:db",
+    "timeclock:project": "react-scripts start",
+    "timeclock:db": "npx json-server --watch db/db.json --port 3001",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
