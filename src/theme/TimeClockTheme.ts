@@ -66,6 +66,11 @@ const TimeClockTheme = createMuiTheme({
             root: {
                 color: 'rgba(0,0,0,0.5)'
             }
+        },
+        MuiPaper: {
+            root: {
+                minWidth: '325px'
+            }
         }
     },
 } as MyThemeOptions);

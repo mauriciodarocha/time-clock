@@ -23,6 +23,7 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
 
     const [dateInput, setDateInput] = useState(moment().tz(moment.tz.guess(true)).format())
     const [timeInput, setTimeInput] = useState(moment().tz(moment.tz.guess(true)).format())
+    const [totals, setTotals] = useState<{[key:string]:number}|null>(null)
     const [dialogBox, setDialogBox] = useState(false)
     const [update, setUpdate] = useState(true)
 
@@ -32,7 +33,10 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
             getTimetableById(employeeId)
                 .then((data: Timetable[]) => {
                     if (data) {
-                        setTimetable(sort(data))
+                        const sortedData = sort(data)
+                        const calcResults = calcTotals(sortedData)
+                        setTotals(calcResults)
+                        setTimetable(sortedData)
                         setUpdate(false)
                     }
                 })
@@ -43,6 +47,7 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
         const dateIso = moment.utc(selectedDate).local().toISOString()
         setDateInput(dateIso)
     }
+
     const handleTimeChange = (selectedTime: MomentInput) => {
         const timeIso = moment.utc(selectedTime).local().toISOString()
         setTimeInput(timeIso)
@@ -83,9 +88,25 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
         }
     }
 
-    const onSubmit = (event?: any) => {
-        event.preventDefault()
-        saveTime()
+    const calcTotals = (time: Timetable[]) => {
+        const timeTotals: {[key:string]: number} = {}
+        let sum = 0;
+        for(let i = 0; i < time.length; i++) {
+            const month: string = moment(time[i].punch).format('YYYYMM')
+            const current: string = moment(time[i].punch).format('YYYYMMDD')
+            const next: string = (time[i+1] && time[i+1].punch) ? moment(time[i+1].punch).format('YYYYMMDD') : ''
+            if (current === next) {
+                const duration = moment.duration(moment(time[i+1].punch).diff(time[i].punch));
+                sum = duration.asMinutes()
+                timeTotals[current] = timeTotals[current] ? timeTotals[current] + sum : sum
+                i++
+            } else {
+                continue;
+            }
+            timeTotals[month] = timeTotals[month] ? timeTotals[month] + sum : sum
+        }
+        console.log(timeTotals)
+        return timeTotals
     }
 
     const sort = (timetable: Timetable[]) => {
@@ -99,17 +120,24 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
             return
         }
         const moments: JSX.Element[] = []
-        let last = '', pos = 'odd', day = ''
+        let today = moment(), lastDay = '', lastMonth = '', pos = 'odd', day = ''
+        let yesterday = moment(today).subtract(1, 'day')
         timetable.map((time, index) => {
-            if(last !== time.punch.replace(/.*?(\d{2})T.*/, '$1')) {
+            const formatedMonth = moment(time.punch).format('YYYYMM')
+            if (lastMonth !== moment(time.punch).format('YYYYMM')) {
+                moments.push(<span className={`main-header ${day}`} key={`main-time-header-${time.id}-${index}`}><span className="time-header"><Moment date={time.punch} format="MMMM" /></span><span className="total">{totals && totals[formatedMonth]}{totals && totals[formatedMonth] && 'min'}</span></span>)
+                lastMonth = moment(time.punch).format('YYYYMM')
+            }
+            if (lastDay !== moment(time.punch).format('DD')) {
+                const formatedDate = moment(time.punch).format('YYYYMMDD')
                 day = '';
-                if ((moment(new Date()).format('YYYYMMDD') === moment(time.punch).format('YYYYMMDD'))) {
+                if ((today.format('YYYYMMDD') === formatedDate)) {
                     day = 'today'
-                } else if ((moment(new Date()).subtract(1, 'day').format('YYYYMMDD') === moment(time.punch).format('YYYYMMDD'))) {
+                } else if ((yesterday.format('YYYYMMDD') === formatedDate)) {
                     day = 'yesterday'
                 }
-                moments.push(<span className={`header ${day}`} key={`time-header-${time.id}-${index}`}><Moment date={time.punch} format="ddd, MMM DD" /></span>)
-                last = time.punch.replace(/.*?(\d{2})T.*/, '$1')
+                moments.push(<span className={`header ${day}`} key={`time-header-${time.id}-${index}`}><span className="time-header"><Moment date={time.punch} format="ddd, MMM DD" /></span><span className="total">{totals && totals[formatedDate]}{totals && totals[formatedDate] && 'min'}</span></span>)
+                lastDay = moment(time.punch).format('DD')
                 pos = 'odd'
             }
             moments.push(<span onClick={e => {timeClicked(time.id)}} className={`column column-${pos}`} key={`time-column-${time.id}`}><Moment date={time.punch} format="HH:mm" /></span>)
@@ -117,6 +145,11 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
             return moments
         })
         return (<>{moments}</>)
+    }
+
+    const onSubmit = (event?: any) => {
+        event.preventDefault()
+        saveTime()
     }
 
     return (

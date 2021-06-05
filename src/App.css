@@ -57,13 +57,30 @@ body {
   cursor: pointer;
 }
 
+.timetable .main-header,
 .timetable .header {
   width: 100%;
+  display: flex;
+  margin: 10px 0 0;
+}
+
+.timetable .main-header {
+  font-size: 15px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.timetable .time-header {
+  width: 40%;
+}
+
+.timetable .header {
+  font-size: 14px;
   margin: 10px 0 0;
 }
 
 .timetable .column {
   width: 40%;
+  font-size: 12px;
 }
 
 .timetable .column-even {
