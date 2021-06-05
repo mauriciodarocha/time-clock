@@ -53,6 +53,25 @@ body {
   flex-wrap: wrap;
 }
 
+.timetable .today .time-header > * {
+  display: none;
+}
+
+.timetable .today .time-header:before {
+  content: 'Today';
+  display: inline-block;
+  font-weight: 600;
+}
+
+.timetable .yesterday .time-header > * {
+  display: none;
+}
+
+.timetable .yesterday .time-header:before {
+  content: 'Yesterday';
+  display: inline-block;
+}
+
 .timetable > .column > * {
   cursor: pointer;
 }
@@ -66,7 +85,7 @@ body {
 
 .timetable .main-header {
   font-size: 15px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .timetable .time-header {
