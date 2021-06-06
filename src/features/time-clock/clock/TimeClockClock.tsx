@@ -158,53 +158,52 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
     }
 
     const showForm = (): JSX.Element => {
-        console.log('user', user)
         if (user && user.name) {
             return (
                 <div className="row pt-5">
                     <div className="col-md-5 px-lg-5 pl-md-5 pb-5">
-                    <AlertDialogBox state={[dialogBox, setDialogBox]}>
-                        <Button onClick={handleDelete} color="primary">
-                            Yes
-                        </Button>
-                        <Button onClick={handleDontDelete} color="secondary">
-                            Cancel
-                        </Button>
-                    </AlertDialogBox>
-                    <form className="col-12 col-md-11 pl-0 " onSubmit={onSubmit}>
-                        <div>
-                            <KeyboardDatePicker
-                                disableToolbar
-                                variant="inline"
-                                format="MM/DD/yyyy"
-                                margin="normal"
-                                id="date-picker-inline"
-                                label="Date"
-                                value={dateInput}
-                                onChange={handleDateChange}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change date',
-                                }}
-                            />
-                        </div>
-                        <div className="mt-4">
-                            <KeyboardTimePicker
-                                ampm={false}
-                                margin="normal"
-                                id="time-picker"
-                                label="Time"
-                                value={timeInput}
-                                onChange={handleTimeChange}
-                                KeyboardButtonProps={{
-                                    'aria-label': 'change time',
-                                }}
-                            />
-                        </div>
-                        <div className="mt-5">
-                            <Button type='submit' color='primary' >Punch in/out</Button>
-                        </div>
-                    </form>
-                </div>
+                        <AlertDialogBox state={[dialogBox, setDialogBox]}>
+                            <Button onClick={handleDelete} color="primary">
+                                Yes
+                            </Button>
+                            <Button onClick={handleDontDelete} color="secondary">
+                                Cancel
+                            </Button>
+                        </AlertDialogBox>
+                        <form className="col-12 col-md-11 pl-0 " onSubmit={onSubmit}>
+                            <div>
+                                <KeyboardDatePicker
+                                    disableToolbar
+                                    variant="inline"
+                                    format="MM/DD/yyyy"
+                                    margin="normal"
+                                    id="date-picker-inline"
+                                    label="Date"
+                                    value={dateInput}
+                                    onChange={handleDateChange}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change date',
+                                    }}
+                                />
+                            </div>
+                            <div className="mt-4">
+                                <KeyboardTimePicker
+                                    ampm={false}
+                                    margin="normal"
+                                    id="time-picker"
+                                    label="Time"
+                                    value={timeInput}
+                                    onChange={handleTimeChange}
+                                    KeyboardButtonProps={{
+                                        'aria-label': 'change time',
+                                    }}
+                                />
+                            </div>
+                            <div className="mt-5">
+                                <Button type='submit' color='primary' >Punch in/out</Button>
+                            </div>
+                        </form>
+                    </div>
                     <div className="timetables col-md-7 pr-md-5">
                         <div className="timetable">
                             {getTimetable()}
@@ -219,7 +218,7 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
                     <p>Please sign in to continue.</p>
                     <p>
                         <Button onClick={() => history.push("/")} color="primary">
-                            Go back to Home page.
+                            Go back to the home page
                         </Button>
                     </p>
                 </div>

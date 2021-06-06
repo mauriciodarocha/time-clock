@@ -39,9 +39,8 @@ const TimeClockHome: React.FunctionComponent<TimeClockHomeProps> = () => {
                     setUser(null)
                     return
                 }
-                const _user: User = data[0]
-                if (employeePassword === _user.password) {
-                    setUser(_user)
+                if (data && data.length && employeePassword === data[0].password) {
+                    setUser(data[0])
                     setMessage(AlertType.Success)
                 } else {
                     setUser(null)

@@ -1,5 +1,5 @@
 export interface User {
-    id: string;
+    id?: string;
     employee_id: string;
     name: string;
     since: string;

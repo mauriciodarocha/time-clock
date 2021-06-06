@@ -71,6 +71,16 @@ const TimeClockTheme = createMuiTheme({
             root: {
                 minWidth: '325px'
             }
+        },
+        MuiSelect: {
+            root: {
+                fontSize: '13.5px'
+            }
+        },
+        MuiMenuItem: {
+            root: {
+                fontSize: '13.5px'
+            }
         }
     },
 } as MyThemeOptions);

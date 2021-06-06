@@ -14,3 +14,10 @@ export async function getUser(employeeId: string): Promise<User[]> {
     const results: AxiosResponse = await axios.get<User>(url)
     return results && results.data
 }
+
+export async function saveUser(data: User): Promise<User> {
+    const url = `http://localhost:3001/users`
+  
+    const results: AxiosResponse = await axios.post<User>(url, data)
+    return results && results.data
+}
