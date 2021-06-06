@@ -14,6 +14,7 @@ import { deleteTimetableById, getTimetableById, saveTimetable } from "../../../s
 import { StoreContext } from "../../../store/Store";
 import AlertDialogBox from "../../../assets/alert-dialog-box/alert-dialog-box";
 import numeral from 'numeral';
+import { useHistory } from 'react-router-dom';
 
 export interface ClockProps {}
  
@@ -30,9 +31,10 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
     const [totals, setTotals] = useState<{[key:string]:number}|null>(null)
     const [dialogBox, setDialogBox] = useState(false)
     const [update, setUpdate] = useState(true)
+    const history = useHistory()
 
     useEffect(() => {
-        const employeeId = user.id 
+        const employeeId = user && user.id
         if (employeeId && update) {
             getTimetableById(employeeId)
                 .then((data: Timetable[]) => {
@@ -45,7 +47,7 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
                     }
                 })
         }
-    }, [user.id, timeToDelete, uuid, update]);
+    }, [user, timeToDelete, uuid, update]);
 
     const handleDateChange = (selectedDate: MomentInput) => {
         const dateIso = moment.utc(selectedDate).local().toISOString()
@@ -109,7 +111,6 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
             }
             timeTotals[month] = timeTotals[month] ? (numeral(timeTotals[month]).add(sum).value()) as number : sum
         }
-        console.log(timeTotals)
         return timeTotals
     }
 
@@ -156,58 +157,79 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
         saveTime()
     }
 
-    return (
-        <>
-        <div className="row pt-5">
-            <div className="col-md-5 px-lg-5 pl-md-5 pb-5">
-                <AlertDialogBox state={[dialogBox, setDialogBox]}>
-                    <Button onClick={handleDelete} color="primary">
-                        I do
-                    </Button>
-                    <Button onClick={handleDontDelete} color="secondary">
-                        Cancel
-                    </Button>
-                </AlertDialogBox>
-                <form className="col-12 col-md-11 pl-0 " onSubmit={onSubmit}>
-                    <div>
-                        <KeyboardDatePicker
-                            disableToolbar
-                            variant="inline"
-                            format="MM/DD/yyyy"
-                            margin="normal"
-                            id="date-picker-inline"
-                            label="Date"
-                            value={dateInput}
-                            onChange={handleDateChange}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change date',
-                            }}
-                        />
+    const showForm = (): JSX.Element => {
+        console.log('user', user)
+        if (user && user.name) {
+            return (
+                <div className="row pt-5">
+                    <div className="col-md-5 px-lg-5 pl-md-5 pb-5">
+                    <AlertDialogBox state={[dialogBox, setDialogBox]}>
+                        <Button onClick={handleDelete} color="primary">
+                            Yes
+                        </Button>
+                        <Button onClick={handleDontDelete} color="secondary">
+                            Cancel
+                        </Button>
+                    </AlertDialogBox>
+                    <form className="col-12 col-md-11 pl-0 " onSubmit={onSubmit}>
+                        <div>
+                            <KeyboardDatePicker
+                                disableToolbar
+                                variant="inline"
+                                format="MM/DD/yyyy"
+                                margin="normal"
+                                id="date-picker-inline"
+                                label="Date"
+                                value={dateInput}
+                                onChange={handleDateChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change date',
+                                }}
+                            />
+                        </div>
+                        <div className="mt-4">
+                            <KeyboardTimePicker
+                                ampm={false}
+                                margin="normal"
+                                id="time-picker"
+                                label="Time"
+                                value={timeInput}
+                                onChange={handleTimeChange}
+                                KeyboardButtonProps={{
+                                    'aria-label': 'change time',
+                                }}
+                            />
+                        </div>
+                        <div className="mt-5">
+                            <Button type='submit' color='primary' >Punch in/out</Button>
+                        </div>
+                    </form>
+                </div>
+                    <div className="timetables col-md-7 pr-md-5">
+                        <div className="timetable">
+                            {getTimetable()}
+                        </div>
                     </div>
-                    <div className="mt-4">
-                        <KeyboardTimePicker
-                            ampm={false}
-                            margin="normal"
-                            id="time-picker"
-                            label="Time"
-                            value={timeInput}
-                            onChange={handleTimeChange}
-                            KeyboardButtonProps={{
-                                'aria-label': 'change time',
-                            }}
-                        />
-                    </div>
-                    <div className="mt-5">
-                        <Button type='submit' color='primary' >Punch in/out</Button>
-                    </div>
-                </form>
-            </div>
-            <div className="timetables col-md-7 pr-md-5">
-                <div className="timetable">
-                    {getTimetable()}
+                </div>
+            )
+        }
+        return (
+            <div className="row pt-5">
+                <div className="col-md-5 px-lg-5 pl-md-5 pb-5">
+                    <p>Please sign in to continue.</p>
+                    <p>
+                        <Button onClick={() => history.push("/")} color="primary">
+                            Go back to Home page.
+                        </Button>
+                    </p>
                 </div>
             </div>
-        </div>
+        )
+    }
+
+    return (
+        <>
+            {showForm()}
         </>
     );
 }
