@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { User } from "../../../models/Users";
 import { StoreContext } from "../../../store/Store";
-import { getUser, saveUser } from "../../../services/Users";
+import { deleteUserById, getUser, getUsers, saveUser } from "../../../services/Users";
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 import { v4 as uuidv4 } from 'uuid'
 
@@ -31,10 +31,12 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
 
     const history = useHistory()
     const {register, handleSubmit, formState} = useForm()
-    const [user, setUser] = useContext(StoreContext as Context<[User,Function]>)
+    const [user,] = useContext(StoreContext as Context<[User,Function]>)
     const [messageType, setMessageType] = useState(AlertType.None);
     const [userLevel, setUserLevel] = useState<UserLevel>("");
     const [message, setMessage] = useState("");
+    const [usersList, setUsersList] = useState(<></>);
+    const [usersListUpdate, setUsersListUpdate] = useState(true);
 
     useEffect(() => {
         if (Object.keys(formState.errors).length && formState.isSubmitted) {
@@ -42,7 +44,11 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
             setMessage("All fields are required.")
             formState.errors = {}
         }
-    }, [formState, user]);
+        if (usersListUpdate) {
+            getUsersList()
+            setUsersListUpdate(false)
+        }
+    }, [formState, usersListUpdate]);
 
     const onSubmit = ({employeeId, employeeName, employeePassword, employeeUserLevel}: UserDataForm) => {
         getUser(employeeId)    
@@ -63,6 +69,7 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
                         })
                         .then(() => {
                             setMessageType(AlertType.Success)
+                            setUsersListUpdate(true)
                         })
                 }
             })
@@ -72,6 +79,15 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
         setUserLevel(event.target.value as UserLevel)
     }
 
+    const handleUserDelete = (id: string|undefined) => {
+        if (id) {
+            deleteUserById(id)
+                .then(() => {
+                    setUsersListUpdate(true)
+                })
+        }
+    }
+
     const Alert = (props: AlertProps) => {
         return <MuiAlert elevation={3} variant="filled" className="primary" {...props} />;
     }
@@ -79,6 +95,34 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
     const snackBarOnClose = (event?: React.SyntheticEvent, reason?: string) => {
         setMessageType(AlertType.None);
     };
+
+    const getUsersList = () => {
+        getUsers()
+            .then((users: User[]) => {
+                let content:JSX.Element = <div></div>;
+                let buffer:JSX.Element[] = []
+                if (users && users.length) {
+                    buffer.push(<div className="list-header" key={`list-header`}>
+                        <span className="list-employee-id">ID</span>
+                        <span className="list-name">Name</span>
+                        <span className="list-password">Password</span>
+                        <span className="list-user-level">User Level</span>
+                    </div>)
+                    users.forEach((user) => {
+                        buffer.push(<div onClick={() => handleUserDelete(user.id)} key={`list-item-${user.id}`} className="list-item">
+                            <span className="list-employee-id">{user.employee_id}</span>
+                            <span className="list-name">{user.name}</span>
+                            <span className="list-password">{user.password}</span>
+                            <span className="list-user-level">{user.user_level}</span>
+                        </div>)
+                    })
+                    content = <div className="users-list">{buffer.flat()}</div>
+                } else {
+                    buffer.push(<div className="users-list-empty">No user registered yet.</div>)
+                }
+                setUsersList(content)
+            })
+    }
 
     const showAdmin = (): JSX.Element => {
         if (user && ['admin'].includes(user.user_level)) {
@@ -133,7 +177,7 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
                         </Snackbar>
                     </div>
                     <div className="users col-md-7 pr-md-5">
-                        {/* user list here */}
+                        {usersList}
                     </div>
                 </div>                
             )

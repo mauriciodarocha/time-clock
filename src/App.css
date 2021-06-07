@@ -116,6 +116,40 @@ body {
   margin-left: 2px;
 }
 
+.users-list > .list-header {
+  font-size: 13px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.users-list > .list-header,
+.users-list > .list-item {
+  display: flex;
+}
+
+.users-list > .list-item {
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.users-list > .list-item:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+
+.users-list > .list-header > span,
+.users-list > .list-item > span {
+  width: 20%;
+  display: inline-block;
+  padding-right: 2px;
+}
+
+.users-list > .list-header > .list-name,
+.users-list > .list-item > .list-name,
+.users-list > .list-header > .list-password,
+.users-list > .list-item > .list-password
+{
+  width: 30%;
+}
+
 @media screen and (max-width:789px) {
   header {
     text-align: center;
