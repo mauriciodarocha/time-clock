@@ -1,5 +1,5 @@
 import { Button, FormControl, FormHelperText, InputLabel, MenuItem, Select, Snackbar, TextField } from "@material-ui/core";
-import React, { Context, useContext, useEffect, useState } from "react";
+import React, { Context, useCallback, useContext, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useHistory } from "react-router-dom";
 import { User } from "../../../models/Users";
@@ -38,6 +38,34 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
     const [usersList, setUsersList] = useState(<></>);
     const [usersListUpdate, setUsersListUpdate] = useState(true);
 
+    const getUsersList = useCallback(() => {
+        getUsers()
+            .then((users: User[]) => {
+                let content:JSX.Element = <div></div>;
+                let buffer:JSX.Element[] = []
+                if (users && users.length) {
+                    buffer.push(<div className="list-header" key={`list-header`}>
+                        <span className="list-employee-id">ID</span>
+                        <span className="list-name">Name</span>
+                        <span className="list-password">Password</span>
+                        <span className="list-user-level">User Level</span>
+                    </div>)
+                    users.forEach((user) => {
+                        buffer.push(<div onClick={() => handleUserDelete(user.id)} key={`list-item-${user.id}`} className="list-item">
+                            <span className="list-employee-id">{user.employee_id}</span>
+                            <span className="list-name">{user.name}</span>
+                            <span className="list-password">{user.password}</span>
+                            <span className="list-user-level">{user.user_level}</span>
+                        </div>)
+                    })
+                    content = <div className="users-list">{buffer.flat()}</div>
+                } else {
+                    buffer.push(<div className="users-list-empty">No user registered yet.</div>)
+                }
+                setUsersList(content)
+            })
+    },[])
+
     useEffect(() => {
         if (Object.keys(formState.errors).length && formState.isSubmitted) {
             setMessageType(AlertType.Warning)
@@ -48,7 +76,7 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
             getUsersList()
             setUsersListUpdate(false)
         }
-    }, [formState, usersListUpdate]);
+    }, [formState, getUsersList, usersListUpdate]);
 
     const onSubmit = ({employeeId, employeeName, employeePassword, employeeUserLevel}: UserDataForm) => {
         getUser(employeeId)    
@@ -95,34 +123,6 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
     const snackBarOnClose = (event?: React.SyntheticEvent, reason?: string) => {
         setMessageType(AlertType.None);
     };
-
-    const getUsersList = () => {
-        getUsers()
-            .then((users: User[]) => {
-                let content:JSX.Element = <div></div>;
-                let buffer:JSX.Element[] = []
-                if (users && users.length) {
-                    buffer.push(<div className="list-header" key={`list-header`}>
-                        <span className="list-employee-id">ID</span>
-                        <span className="list-name">Name</span>
-                        <span className="list-password">Password</span>
-                        <span className="list-user-level">User Level</span>
-                    </div>)
-                    users.forEach((user) => {
-                        buffer.push(<div onClick={() => handleUserDelete(user.id)} key={`list-item-${user.id}`} className="list-item">
-                            <span className="list-employee-id">{user.employee_id}</span>
-                            <span className="list-name">{user.name}</span>
-                            <span className="list-password">{user.password}</span>
-                            <span className="list-user-level">{user.user_level}</span>
-                        </div>)
-                    })
-                    content = <div className="users-list">{buffer.flat()}</div>
-                } else {
-                    buffer.push(<div className="users-list-empty">No user registered yet.</div>)
-                }
-                setUsersList(content)
-            })
-    }
 
     const showAdmin = (): JSX.Element => {
         if (user && ['admin'].includes(user.user_level)) {
