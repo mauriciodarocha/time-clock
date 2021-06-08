@@ -3,40 +3,32 @@
 ## Introduction
 
 The Time Clock is an app to easily register your working time. You can punch in every time you start working, and with another simple click punch out. When the working period is finished and after you punch out, you will see a total of hours worked daily and monthly.
-<br/>
-<br/>
+
 
 ## Installation
 
-Download the project from the Gitlab repository*. Open the terminal, access the main folder of the application, you should be able to see a file named "package.json", then run the following command to install the project.
-<br/>
-<br/>
+Open the terminal, then download the project from the Gitlab repository*. Access the main folder of the application, you should be able to see a file named "Dockerfile", then run the following command to install the project.
+
 
 ```bash
-npm install
+docker-compose up
 ```
 
-*You'll need a invitation to the project's repository. And you'll need Node.js installed in your computer.
-<br/>
-<br/>
+*You'll need a invitation to the project's repository, and you have to have Docker installed in your computer.
 
-## Start the application
 
-Once all node modules are installed, you can start the application with the command below.
-<br/>
-<br/>
+## Starting the application
 
-```bash
-npm start
-```
-<br/>
+You don't need to do anything else. Once the docker image and containers are created, and the node modules are installed, the app will start automatically. All that might take a while. Just wait for a message like the image below.
+
+
+![Compiled successfully](./public/assets/compiled-successfully.png)
 
 
 ## Open the app
 
 You just need to [click  here](http://localhost:3000) or open the URL <http://localhost:3000> in your browser.
 
-<br/>
 
 ## How to use it
 
