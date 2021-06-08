@@ -35,7 +35,7 @@
   "scripts": {
     "start": "concurrently \"npm run timeclock:project\" \"npm run timeclock:db\" --kill-others",
     "timeclock:project": "react-scripts start",
-    "timeclock:db": "npx json-server --watch db/db.json --port 3001",
+    "timeclock:db": "npx json-server --watch db/db.json --port 3001 --host 0.0.0.0",
     "react:start": "react-scripts start",
     "react:build": "react-scripts build",
     "react:test": "react-scripts test",
