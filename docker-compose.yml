@@ -25,6 +25,7 @@ services:
         tty: true
         volumes:
             - ./:/usr/app/time-clock/
+            - /usr/app/time-clock/node_modules
         expose: 
             - "3000"
         ports:
