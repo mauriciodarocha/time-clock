@@ -16,6 +16,7 @@ export interface IAlertDialogBoxProps {
 }
 
 const Transition = React.forwardRef(function Transition(
+    // eslint-disable-next-line  @typescript-eslint/no-explicit-any
     props: TransitionProps & { children?: ReactElement<any, any> },
     ref: Ref<unknown>,
 ) {

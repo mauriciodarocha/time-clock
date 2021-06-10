@@ -151,7 +151,7 @@ const Clock: React.FunctionComponent<JSX.Element> = () => {
         return (<>{moments}</>)
     }
 
-    const onSubmit = (event?: any) => {
+    const onSubmit = (event: React.FormEvent) => {
         event.preventDefault()
         saveTime()
     }
