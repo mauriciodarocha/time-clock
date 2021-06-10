@@ -1,4 +1,4 @@
-import React, { FunctionComponent, ReactElement, Ref } from 'react';
+import React, { ReactElement, Ref } from 'react';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -10,7 +10,7 @@ import { TransitionProps } from '@material-ui/core/transitions'
 export interface IAlertDialogBoxProps {
     state: [
         open: boolean,
-        setOpen: Function
+        setOpen: React.Dispatch<React.SetStateAction<boolean>>
     ],
     children: boolean | React.ReactChild | React.ReactFragment | React.ReactPortal | null | undefined
 }
@@ -22,7 +22,7 @@ const Transition = React.forwardRef(function Transition(
     return <Slide direction="up" ref={ref} {...props} />;
 });
 
-const AlertDialogBox: FunctionComponent<IAlertDialogBoxProps> = ({ state: [open, setOpen], children }) => {
+const AlertDialogBox = ({ state: [open, setOpen], children }: IAlertDialogBoxProps ): JSX.Element => {
     const handleClose = () => {
         setOpen(false);
     };
@@ -50,4 +50,5 @@ const AlertDialogBox: FunctionComponent<IAlertDialogBoxProps> = ({ state: [open,
         </>
     );
 }
+
 export default AlertDialogBox

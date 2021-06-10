@@ -16,13 +16,11 @@ enum AlertType {
     Error,
     None
 }
-
-export interface TimeClockHomeProps {}
  
-const TimeClockHome: React.FunctionComponent<TimeClockHomeProps> = () => {
+const TimeClockHome: React.FunctionComponent<JSX.Element> = () => {
     
     const {register, handleSubmit, formState} = useForm()
-    const [, setUser] = useContext(StoreContext as Context<[User,Function]>)
+    const [, setUser] = useContext(StoreContext as Context<[User,React.Dispatch<React.SetStateAction<User|null>>]>)
     const [message, setMessage] = useState(AlertType.None);
     
     useEffect(() => {
@@ -53,7 +51,7 @@ const TimeClockHome: React.FunctionComponent<TimeClockHomeProps> = () => {
         return <MuiAlert elevation={3} variant="filled" className="primary" {...props} />;
     }
 
-    const snackBarOnClose = (event?: React.SyntheticEvent, reason?: string) => {
+    const snackBarOnClose = () => {
         setMessage(AlertType.None);
     };
 
@@ -91,7 +89,7 @@ const TimeClockHome: React.FunctionComponent<TimeClockHomeProps> = () => {
             <div className="welcome col-md-7 pr-md-5">
                 <p>Welcome!</p>
                 <p>The Time Clock is here to help you keep your working time organized.</p>
-                <p>Click on "CLOCK" to punch in/out or check your timesheet and working hours.</p>
+                <p>Click on &quot;CLOCK&quot; to punch in/out or check your timesheet and working hours.</p>
                 <p>The button 
                     <span className="help-icon">
                         <img className="help-icon-img" src={process.env.PUBLIC_URL + '/assets/help-icon.png'} alt='Help icon' />

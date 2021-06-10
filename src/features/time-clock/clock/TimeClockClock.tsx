@@ -15,13 +15,11 @@ import { StoreContext } from "../../../store/Store";
 import AlertDialogBox from "../../../assets/alert-dialog-box/alert-dialog-box";
 import numeral from 'numeral';
 import { useHistory } from 'react-router-dom';
-
-export interface ClockProps {}
  
-const Clock: React.FunctionComponent<ClockProps> = () => {
+const Clock: React.FunctionComponent<JSX.Element> = () => {
     moment.tz.setDefault("America/New_York");
 
-    const [user,] = useContext(StoreContext as Context<[User,Function]>)
+    const [user,] = useContext(StoreContext as Context<[User,React.Dispatch<React.SetStateAction<User|null>>]>)
     const [timetable, setTimetable] = useState<Timetable[]>()
     const [timeToDelete, setTimeToDelete] = useState("") 
     const [uuid, setUuid] = useState("") 
@@ -87,7 +85,7 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
                 punch: moment(dateInput).format("YYYY-MM-DD") + "T" + moment(timeInput).format("HH:mm:00")
             }
             saveTimetable(data)
-               .then((r) => {
+               .then(() => {
                     setUuid(id)
                     setUpdate(true)
                 })
@@ -96,7 +94,7 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
 
     const calcTotals = (time: Timetable[]) => {
         const timeTotals: {[key:string]: number} = {}
-        let sum: number = 0;
+        let sum = 0;
         for(let i = 0; i < time.length; i++) {
             const month: string = moment(time[i].punch).format('YYYYMM')
             const current: string = moment(time[i].punch).format('YYYYMMDD')
@@ -125,8 +123,9 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
             return
         }
         const moments: JSX.Element[] = []
-        let today = moment(), lastDay = '', lastMonth = '', pos = 'odd', day = ''
-        let yesterday = moment(today).subtract(1, 'day')
+        const today = moment()
+        const yesterday = moment(today).subtract(1, 'day')
+        let lastDay = '', lastMonth = '', pos = 'odd', day = ''
         timetable.map((time, index) => {
             const formatedMonth = moment(time.punch).format('YYYYMM')
             if (lastMonth !== moment(time.punch).format('YYYYMM')) {
@@ -145,7 +144,7 @@ const Clock: React.FunctionComponent<ClockProps> = () => {
                 lastDay = moment(time.punch).format('DD')
                 pos = 'odd'
             }
-            moments.push(<span onClick={e => {timeClicked(time.id)}} className={`column column-${pos}`} key={`time-column-${time.id}`}><Moment date={time.punch} format="HH:mm" /></span>)
+            moments.push(<span onClick={() => {timeClicked(time.id)}} className={`column column-${pos}`} key={`time-column-${time.id}`}><Moment date={time.punch} format="HH:mm" /></span>)
             pos = pos === 'odd' ? 'even' : 'odd'
             return moments
         })

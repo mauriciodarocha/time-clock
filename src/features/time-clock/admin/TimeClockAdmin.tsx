@@ -24,14 +24,12 @@ interface UserDataForm {
     employeePassword: string,
     employeeUserLevel: string
 }
-
-export interface TimeClockAdminProps {}
  
-const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
+const TimeClockAdmin: React.FunctionComponent<JSX.Element> = () => {
 
     const history = useHistory()
     const {register, handleSubmit, formState} = useForm()
-    const [user,] = useContext(StoreContext as Context<[User,Function]>)
+    const [user,] = useContext(StoreContext as Context<[User,React.Dispatch<React.SetStateAction<User|null>>]>)
     const [messageType, setMessageType] = useState(AlertType.None);
     const [userLevel, setUserLevel] = useState<UserLevel>("");
     const [message, setMessage] = useState("");
@@ -42,7 +40,7 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
         getUsers()
             .then((users: User[]) => {
                 let content:JSX.Element = <div></div>;
-                let buffer:JSX.Element[] = []
+                const buffer:JSX.Element[] = []
                 if (users && users.length) {
                     buffer.push(<div className="list-header" key={`list-header`}>
                         <span className="list-employee-id">ID</span>
@@ -103,7 +101,7 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
             })
     }
 
-    const handleUserLevelChange = (event: React.ChangeEvent<{name?: string | undefined; value: unknown;}>, child: React.ReactNode) => {
+    const handleUserLevelChange = (event: React.ChangeEvent<{name?: string | undefined; value: unknown;}>) => {
         setUserLevel(event.target.value as UserLevel)
     }
 
@@ -120,7 +118,7 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
         return <MuiAlert elevation={3} variant="filled" className="primary" {...props} />;
     }
 
-    const snackBarOnClose = (event?: React.SyntheticEvent, reason?: string) => {
+    const snackBarOnClose = () => {
         setMessageType(AlertType.None);
     };
 
@@ -141,7 +139,7 @@ const TimeClockAdmin: React.FunctionComponent<TimeClockAdminProps> = () => {
                             </div>
                             <div className="mt-4">
                                 <FormControl className='select-form-control w-100'>
-                                    <InputLabel id="admin-label-select">Employee's user level</InputLabel>
+                                    <InputLabel id="admin-label-select">Employee&apos;s user level</InputLabel>
                                     <Select
                                             id="admin-select"
                                             className="w-100"
