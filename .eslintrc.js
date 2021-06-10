@@ -21,7 +21,7 @@ module.exports = {
         "@typescript-eslint"
     ],
     "rules": {
-        "@typescript-eslint/no-explicit-any": "off"
+        // "@typescript-eslint/no-explicit-any": "off"
     },
     "settings": {
         "react": {
