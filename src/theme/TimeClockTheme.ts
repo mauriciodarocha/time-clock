@@ -1,6 +1,6 @@
 import { createMuiTheme, ThemeOptions } from "@material-ui/core";
 
-interface MyThemeOptions extends ThemeOptions {}
+type MyThemeOptions = ThemeOptions
 
 const TimeClockTheme = createMuiTheme({
     palette: {

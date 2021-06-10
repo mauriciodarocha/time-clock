@@ -12,7 +12,7 @@ const initialState: User = {
 
 export const StoreContext = createContext<ContextType<any>|User>(initialState)
 
-export const StoreProvider = (props: { children: React.ReactChild | React.ReactFragment | React.ReactPortal }) => {
+export const StoreProvider = (props: { children: React.ReactChild | React.ReactFragment | React.ReactPortal }): ContextType<any|User> => {
     const [user, setUser] = useState(initialState)
     return (
         <StoreContext.Provider value={[user, setUser]}>
