@@ -1,15 +1,15 @@
-import React, { Context, useContext } from 'react';
+import React, { Dispatch, SetStateAction, useContext } from 'react';
 import { BrowserRouter, Link, Route } from 'react-router-dom';
 import { User } from '../../models/Users';
-import { StoreContext } from '../../store/Store';
+import { StoreContext, IStoreContext } from '../../store/Store';
 import TimeClockHome from '../time-clock/home/TimeClockHome';
 import TimeClockClock from '../time-clock/clock/TimeClockClock';
 import TimeClockAdmin from '../time-clock/admin/TimeClockAdmin';
  
-const MainStructure: React.FunctionComponent<JSX.Element> = () => {
-    const contextUser = useContext(StoreContext as Context<[User,React.Dispatch<React.SetStateAction<User>>]>)
+const MainStructure: React.FunctionComponent = (): JSX.Element => {
+    const contextUser = useContext<IStoreContext|Dispatch<SetStateAction<IStoreContext>>|unknown>(StoreContext)
     const menuLinks = (): JSX.Element => {
-        const [user] = contextUser;
+        const [user] = contextUser as User[];
         return (
             <div className='links d-flex justify-content-end'>
                 <span>
