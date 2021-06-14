@@ -16,7 +16,7 @@ import AlertDialogBox from "../../../assets/alert-dialog-box/alert-dialog-box";
 import numeral from 'numeral';
 import { useHistory } from 'react-router-dom';
  
-const Clock: React.FunctionComponent<JSX.Element> = () => {
+const TimeClockClock: React.FunctionComponent<JSX.Element[]> = () => {
     moment.tz.setDefault("America/New_York");
 
     const [user,] = useContext(StoreContext as Context<[User,React.Dispatch<React.SetStateAction<User|null>>]>)
@@ -169,9 +169,10 @@ const Clock: React.FunctionComponent<JSX.Element> = () => {
                                 Cancel
                             </Button>
                         </AlertDialogBox>
-                        <form className="col-12 col-md-11 pl-0 " onSubmit={onSubmit}>
+                        <form className="time-clock-form col-12 col-md-11 pl-0 " onSubmit={onSubmit}>
                             <div>
                                 <KeyboardDatePicker
+                                    className="date-fld"
                                     disableToolbar
                                     variant="inline"
                                     format="MM/DD/yyyy"
@@ -187,6 +188,7 @@ const Clock: React.FunctionComponent<JSX.Element> = () => {
                             </div>
                             <div className="mt-4">
                                 <KeyboardTimePicker
+                                    className="time-fld"
                                     ampm={false}
                                     margin="normal"
                                     id="time-picker"
@@ -232,4 +234,4 @@ const Clock: React.FunctionComponent<JSX.Element> = () => {
     );
 }
  
-export default Clock;
+export default TimeClockClock;

@@ -17,7 +17,7 @@ enum AlertType {
     None
 }
  
-const TimeClockHome: React.FunctionComponent<JSX.Element> = () => {
+const TimeClockHome: React.FunctionComponent<JSX.Element[]> = () => {
     
     const {register, handleSubmit, formState} = useForm()
     const [, setUser] = useContext(StoreContext as Context<[User,React.Dispatch<React.SetStateAction<User|null>>]>)
@@ -59,15 +59,15 @@ const TimeClockHome: React.FunctionComponent<JSX.Element> = () => {
         <>
         <div className="row pt-5">
             <div className="col-md-5 px-lg-5 pl-md-5 pb-5">
-                <form className="col-12 col-md-11 pl-0 " onSubmit={handleSubmit(onSubmit)}>
+                <form className="time-home-form col-12 col-md-11 pl-0 " onSubmit={handleSubmit(onSubmit)}>
                     <div>
-                        <TextField className="w-100" {...register("employeeId", { required: true })} label="Employee's ID" placeholder="Type your employee id" helperText="Field is required."  />
+                        <TextField className="employee-id-fld w-100" {...register("employeeId", { required: true })} label="Employee's ID" placeholder="Type your employee id" helperText="Field is required."  />
                     </div>
                     <div className="mt-4">
-                        <TextField className="w-100" {...register("employeePassword", { required: true })} label="Employee's password" placeholder="Type your employee password" helperText="Field is required." />
+                        <TextField className="employee-pwd-fld w-100" {...register("employeePassword", { required: true })} label="Employee's password" placeholder="Type your employee password" helperText="Field is required." />
                     </div>
                     <div className="mt-5">
-                        <Button type='submit' color='primary' >Sign in</Button>
+                        <Button className="sign-in-btn" type='submit' color='primary' >Sign in</Button>
                     </div>
                 </form>
                 <Snackbar open={message === AlertType.Success} autoHideDuration={6000} onClose={snackBarOnClose}>

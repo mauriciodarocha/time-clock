@@ -25,7 +25,7 @@ interface UserDataForm {
     employeeUserLevel: string
 }
  
-const TimeClockAdmin: React.FunctionComponent<JSX.Element> = () => {
+const TimeClockAdmin: React.FunctionComponent<JSX.Element[]> = () => {
 
     const history = useHistory()
     const {register, handleSubmit, formState} = useForm()
@@ -127,7 +127,7 @@ const TimeClockAdmin: React.FunctionComponent<JSX.Element> = () => {
             return (
                 <div className="row pt-5">
                     <div className="col-md-5 px-lg-5 pl-md-5 pb-5">
-                        <form className="col-12 col-md-11 pl-0 " onSubmit={handleSubmit(onSubmit)}>
+                        <form className="time-admin-form col-12 col-md-11 pl-0 " onSubmit={handleSubmit(onSubmit)}>
                             <div>
                                 <TextField id="admin-id" className="w-100" {...register("employeeId", { required: true })} label="Employee's ID" placeholder="Type employee's id" helperText="Field is required."  />
                             </div>
@@ -181,11 +181,11 @@ const TimeClockAdmin: React.FunctionComponent<JSX.Element> = () => {
             )
         }
         return (
-            <div className="row pt-5">
+            <div className="no-auth row pt-5">
                 <div className="col-md-5 px-lg-5 pl-md-5 pb-5">
                     <p>Please sign in to continue.</p>
                     <p>
-                        <Button onClick={() => history.push("/")} color="primary">
+                        <Button className="btn-go-home" onClick={() => history.push("/")} color="primary">
                             Go back to the home page
                         </Button>
                     </p>

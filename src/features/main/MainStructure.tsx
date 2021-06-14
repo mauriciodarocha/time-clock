@@ -13,14 +13,14 @@ const MainStructure: React.FunctionComponent = (): JSX.Element => {
         return (
             <div className='links d-flex justify-content-end'>
                 <span>
-                    <Link to='/'>Home</Link>
+                    <Link className={'home-lnk link'} to='/'>Home</Link>
                 </span>
                 <span>
-                    <Link to='/time-clock'>Clock</Link>
+                    <Link className={'clock-lnk link'} to='/time-clock'>Clock</Link>
                 </span>
                 { user && ['admin'].includes(user.user_level) && 
                     <span>
-                        <Link to='/time-clock/admin'>Admin</Link>
+                        <Link className={'admin-lnk link'} to='/time-clock/admin'>Admin</Link>
                     </span>
                 }
             </div>
