@@ -134,7 +134,6 @@ const TimeClockClock: React.FunctionComponent<JSX.Element[]> = () => {
             }
             if (lastDay !== moment(time.punch).format('DD')) {
                 const formatedDate = moment(time.punch).format('YYYYMMDD')
-                day = '';
                 if ((today.format('YYYYMMDD') === formatedDate)) {
                     day = 'today'
                 } else if ((yesterday.format('YYYYMMDD') === formatedDate)) {
@@ -142,7 +141,8 @@ const TimeClockClock: React.FunctionComponent<JSX.Element[]> = () => {
                 }
                 moments.push(<span className={`header ${day}`} key={`time-header-${time.id}-${index}`}><span className="time-header"><Moment date={time.punch} format="ddd, MMM DD" /></span><span className="total">{totals && <NumberFormat value={totals[formatedDate]} displayType={'text'} decimalScale={2} thousandSeparator={true} suffix={' hours'} />}</span></span>)
                 lastDay = moment(time.punch).format('DD')
-                pos = 'odd'
+                pos = 'odd';
+                day = '';
             }
             moments.push(<span onClick={() => {timeClicked(time.id)}} className={`column column-${pos}`} key={`time-column-${time.id}`}><Moment date={time.punch} format="HH:mm" /></span>)
             pos = pos === 'odd' ? 'even' : 'odd'
