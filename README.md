@@ -64,6 +64,16 @@ You don't need to worry about punch in breaks, once breaks are the time between 
 - Administrator's option to block a user without deleting them. 
 - Administrator should be able to see a total of monthly and daily breaks.
 
-### TODO:
+### Unit tests
 
-Unit tests
+To run tests, run the application, open one more terminal, then copy and paste the following command.
+
+```bash
+docker exec -t time-clock-app npm test
+```
+
+If you are running Git Bash in Windows, add &quot;winpty&quot; before the command line.
+
+```bash
+winpty docker exec -t time-clock-app npm test
+```
