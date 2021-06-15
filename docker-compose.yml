@@ -4,13 +4,13 @@ services:
         build:
             context: .
             dockerfile: db.dockerfile
-        container_name: time-clock-react-db_v.0.1.0
-        image: node_16_time_clock_db
+        container_name: time-clock-db
+        image: time-clock-db
         working_dir: /usr/app/time-clock
         command: npm run timeclock:db
         volumes:
             - ./:/usr/app/time-clock/
-            - ./node_modules:/usr/app/time-clock/node_modules
+            - node_modules:/usr/app/time-clock/node_modules
         expose:
             - "3001"
         ports:
@@ -20,8 +20,8 @@ services:
         build:
             context: .
             dockerfile: app.dockerfile
-        container_name: time-clock-react_v.0.1.0
-        image: node_16_time_clock
+        container_name: time-clock-app
+        image: time-clock-app
         working_dir: /usr/app/time-clock
         command: npm run timeclock:project
         stdin_open: true
@@ -36,7 +36,7 @@ services:
             - "3000"
         ports:
             - "3000:3000"
-        links: 
+        depends_on: 
             - db
 volumes: 
     node_modules:
