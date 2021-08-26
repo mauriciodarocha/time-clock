@@ -33,8 +33,8 @@ You just need to [click  here](http://localhost:3000) or open the URL <http://lo
 ## How to use it
 
 You'll need a user and a password to access the app functionalities.<br/>
-So, fill out the fields with "0.1" and "admin" to have access to all functionalities, or an employee's username and password.<br/>
-If you don't have a username and a password yourself, just add one at the "Admin" page.<br/>
+So, fill out the fields with employee's id: *0.1* and employee's password: *admin* to have access to all functionalities, or another employee's id and password.<br/>
+If you don't have an id and a password yourself, just login as admin and add one at the "Admin" page.<br/>
 
 ### Adding the time in/out to your time clock
 
